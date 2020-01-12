@@ -1,0 +1,107 @@
+.personal_center_html{
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    //background-image: url("../../imgs/personal_header_bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 200px;
+
+    .title{
+        font-size: 24px;
+        text-align: center;
+        color: #fff;
+        margin-top: 22px;
+    }
+    .panel_style(@marginTop,@height){
+        position: relative;
+        width: 90%;
+        height: @height;
+        background-color: #fff;
+        border-radius: 14px;
+        box-shadow: 0 0 10px #ccc;
+        text-align: center;
+        margin: @marginTop auto 30px auto;
+        padding: 20px;
+    }
+    .user_info_panel{
+        .panel_style(60px, 160px);
+
+        .circle_yellow{
+            position: absolute;
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 14px;
+            background-color: @theme_color;
+        }
+        .panel_left{
+            display: inline-block;
+            width: 91%;
+            height: auto;
+            text-align: left;
+        }
+        .panel_right{
+            display: inline-block;
+            width: 8%;
+            height: auto;
+            .ele1{
+                .circle_yellow();
+                top: 22px;
+                right: 36px;
+            }
+            .ele2{
+                width: 20px;
+            }
+            .ele3{
+                .circle_yellow();
+                bottom: 22px;
+                right: 36px;
+            }
+        }
+        table{
+            width: 100%;
+
+            tr{
+            }
+        }
+
+        .user_name{
+            font-size: 22px;
+            color:#111;
+        }
+        .stu_name{
+            margin-top: 16px;
+            font-size: 18px;
+            color:#666;
+        }
+    }
+    .function_panel{
+        .panel_style(10px, auto);
+        table{
+            width: 100%;
+            tr{
+                font-size: 22px;
+                height: 60px;
+                td{
+                    text-align: left;
+                }
+            }
+            .icon{
+                width: 32px;
+            }
+            .arrow{
+                width: 15px;
+            }
+        }
+        .logout_btn{
+            width: 80%;
+            border-radius: 100px;
+            background-color: #ff8181;
+            color: #fff;
+            height: 55px;
+            margin-top: 25px;
+            border: 0;
+        }
+    }
+}

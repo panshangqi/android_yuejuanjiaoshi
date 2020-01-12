@@ -1,0 +1,161 @@
+.exam_analysis_html{
+    .loading{
+        position: absolute;
+        width: 100%;
+        height: 60px;
+        top: 50%;
+        left: 0;
+        margin-top: -30px;
+        text-align: center;
+    }
+    //.subject_list{
+    //    width:100%;
+    //    overflow-y: hidden;
+    //    overflow-x: auto;
+    //    height: 42px;
+    //    -webkit-backface-visibility: hidden;
+    //    -webkit-overflow-scrolling: touch;
+    //    box-sizing: border-box;
+    //    ul{
+    //        padding: 0;
+    //        margin:0;
+    //        width: 400px;
+    //        max-width:750px;
+    //        white-space: nowrap;
+    //        min-width:320px;
+    //        list-style-type:none;
+    //        list-style: none;
+    //        height: auto;
+    //        overflow: hidden;
+    //        font-size: 0;
+    //        li{
+    //            list-style: none;
+    //            padding: 0px 16px 0px 16px;
+    //            line-height: 42px;
+    //            height:42px;
+    //            margin:0;
+    //            display: inline;
+    //            font-size: 18px;
+    //            display: inline-block;
+    //        }
+    //    }
+    //}
+    //.subject_list::-webkit-scrollbar{display: none;}
+    .content{
+        padding: 0;
+        height: auto;
+
+        .sub_title{
+            background-color: #f2f3f3;
+            font-size: 18px;
+            color:#222;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            box-sizing: border-box;
+        }
+        .student_paper_image{
+            width: 100%;
+            height: 250px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #fff;
+            img{
+                width: 100%;
+            }
+        }
+        .question_list{
+            position: relative;
+            width: 100%;
+            background-color: #fff;
+
+            .que_row{
+                width: 100%;
+                display: flex;
+                border-bottom: 1px solid #dedede;
+                height: 40px;
+                line-height: 40px;
+                font-size: 18px;
+                justify-content: space-between;
+                .que_name{
+                    margin-left: 8px;
+                }
+                .que_score{
+                    margin-right: 8px;
+                }
+            }
+            .no_data_tip{
+                position: absolute;
+                width: 100%;
+                top: 50%;
+                height: 25px;
+                left:0;
+                margin-top: -20px;
+                font-size: 18px;
+                text-align: center;
+            }
+        }
+
+    }
+    .que_detail_virtual_html{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        display: none;
+        overflow: hidden;
+        background-color: #f2f2f2;
+        .que_title{
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            border-bottom: 1px solid #dedede;
+            background-color: #fff;
+            padding-left: 16px;
+            padding-right: 16px;
+            font-size: 20px;
+            .que_num{
+                float:left;
+            }
+            .que_score{
+                float:right;
+            }
+        }
+        .que_answer_box{
+            width: 100%;
+            min-height: 140px;
+            margin-top: 12px;
+            .cut_title{
+                width: 100%;
+                height: 50px;
+                line-height: 50px;
+                font-size: 18px;
+                padding-left: 16px;
+                box-sizing: border-box;
+                background-color: #fff;
+                border-bottom: 1px solid #aaa;
+            }
+            .que_answer_scroll{
+                font-size: 18px;
+                position: absolute;
+                top: 166px;
+                left:0;
+                bottom:0;
+                width: 100%;
+                overflow-y: auto;
+                background-size: #fff000;
+                .answer_content{
+                    width: 100%;
+                    min-height: 200px;
+                    padding: 16px;
+                    background-color: #fff;
+                }
+            }
+            img{
+                width: 100%;
+            }
+        }
+    }
+
+}
