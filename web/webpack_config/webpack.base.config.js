@@ -60,7 +60,12 @@ module.exports = {
                             'theme_color': '#FF9647',
                             'theme_red': '#FF796B',
                             'theme_green': '#13D469',
+                            'theme_gray': '#f2f2f2',
                             'img_root': '/static/imgs'
+                        },
+                        modifyVars:{
+                            'primary-color': '#FF9647', // 全局主色
+                            'link-color': '#FF9647'  // 链接色
                         },
                         javascriptEnabled: true
                     }
