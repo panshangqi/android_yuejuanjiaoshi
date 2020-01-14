@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <title>Carson_Ho</title>
+    <style type="text/css">
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .bg{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .content{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+    </style>
+    <body>
+        <img id="bg" class="bg" src="./imgs/bizhi001.jpg"/>
+        <div class="content">
+            <input type="text"/>
+            <input type="text"/>
+			<textarea id="result" style="height: 500px;width:500px"></textarea>
+            <button id="login_button">登录</button>
+            <div id="text"/>
+        </div>
+    </body>
+
+    <script>
+        function callJS(){
+          alert("Android调用了JS的callJS方法");
+        }
+        $('#login_button').on('click',function(){
+            $('#text').html('hehe');
+            //android.showToast("哈哈啊哈 ");
+        })
+		$('#result').val("xxxxxxxxxx")
+		
+	  function soap() {
+
+            var xmlhttp = new XMLHttpRequest();
+           
+            //replace second argument with the path to your Secret Server webservices
+            xmlhttp.open('POST', 'http://49.4.48.115/exam/AppdatacenterImpPort?wsdl', true);
+           
+            //create the SOAP request
+            //replace username, password (and org + domain, if necessary) with the appropriate info
+            var strRequest =
+                '<?xml version="1.0"?>' +
+                '<soap:Envelope '+
+					'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" ' + 
+					'xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ' + 
+					'xmlns:xs="http://www.w3.org/2001/XMLSchema" ' +
+					'xmlns:AppdatacenterImpService="http://webservice.app.com/" '+
+					'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' + 
+					'xsl:version="1.0">' +
+                    '<soap:Body>' +
+                        '<AppdatacenterImpService:UserLogin>' +
+                            '<arg0>1001</arg0>' +
+                            '<arg1>888888</arg1>' +
+                        '</AppdatacenterImpService:UserLogin>' +
+                    '</soap:Body>' +
+                '</soap:Envelope>';
+
+            //specify request headers
+            xmlhttp.setRequestHeader('Content-Type', 'text/xml; charset=utf-8');
+            xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+
+            //FOR TESTING: display results in an alert box once the response is received
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    //alert(xmlhttp.responseText);
+					$('#result').val(xmlhttp.responseText);
+                }
+            };
+
+            //send the SOAP request
+            xmlhttp.send(strRequest);
+        };
+       
+        //build & send the request when the page loads
+        window.onload = function() {
+            soap();
+        };
+    </script>
+
+</head>
+
+</html>

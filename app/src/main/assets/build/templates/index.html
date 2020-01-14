@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>YUEJUANJIAZHANG</title>
+        <style type="text/css">
+            .environment{
+                position: absolute;
+                display: inline-block;
+                top:0;
+                right:0;
+                color:#32CD32;
+                text-align: right;
+                z-index: 1100;
+                display: none;
+                font-size: 0.8rem;
+            }
+        </style>
+        <script>
+            // console.log('------------------屏幕适配 动态计算-font-size--------------------------')
+            // var designWidth = 414 //以文档宽度为基准 以Iphone6 Plus 414*736为基准
+            // var clientWidth = document.documentElement.clientWidth || document.body.clientWidth
+            // var default_px = 16 * (clientWidth / designWidth)
+            // console.log('document width = '+ clientWidth + ', font-size: ' + default_px)
+            // document.documentElement.style.fontSize = default_px + 'px'
+            // window.onresize = function () {
+            //     document.documentElement.style.fontSize = default_px +'px'
+            // }
+            // var DETAULT_PX = default_px
+            // function getRem2Px(rems){
+            //     return parseInt(rems * DETAULT_PX)
+            // }
+            let rate = document.documentElement.clientWidth / 512
+            function getRealPX(_px){
+                return _px * rate
+            }
+        </script>
+    <link rel="shortcut icon" href="../favicon.jpg"><link href="../vendors.css?4a7fc882e79e956b1425" rel="stylesheet"><link href="../index.css?4a7fc882e79e956b1425" rel="stylesheet"></head>
+
+    <body>
+        <div id="root" style="height: 100%"></div>
+        <div class="environment" id="env_box_0x3320">
+        </div>
+    <script type="text/javascript" src=".././vendors.8b17aab7.js?4a7fc882e79e956b1425"></script><script type="text/javascript" src=".././index.f07f1544.js?4a7fc882e79e956b1425"></script></body>
+</html>
+

@@ -1,0 +1,17 @@
+
+.gradle
+/local.properties
+/.idea/caches/build_file_checksums.ser
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+.idea/
+.DS_Store
+/build
+app/release
+app/debug
+app/build
+/captures
+.externalNativeBuild
+web/node_modules
+web/.idea

@@ -1,0 +1,20 @@
+keytool -list -v -keystore android.keystore可查看签名信息
+
+keytool -genkey -alias android.keystore -keyalg RSA -validity 20000 -keystore android.keystore 生成签名文件
+
+keytool -list -printcert -jarfile app-release-sign.apk  查看APK签名
+您的名字与姓氏是什么?
+  [Unknown]:  pan
+您的组织单位名称是什么?
+  [Unknown]:  wanci
+您的组织名称是什么?
+  [Unknown]:  wanci
+您所在的城市或区域名称是什么?
+  [Unknown]:  xinxiang
+您所在的省/市/自治区名称是什么?
+  [Unknown]:  xinxiang
+该单位的双字母国家/地区代码是什么?
+  [Unknown]:  410700
+CN=pan, OU=wanci, O=wanci, L=xinxiang, ST=xinxiang, C=410700是否正确?
+
+秘钥：yuejuanjiazhang
