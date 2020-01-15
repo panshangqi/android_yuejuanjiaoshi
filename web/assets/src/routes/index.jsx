@@ -11,6 +11,7 @@ import Login from '@pages/Login'
 // import PageFooter from '@components/PageFooter'
 import Page from '@components/Page'
 import Personal from '@pages/Personal'
+import CorrectEditScore from '@pages/CorrectEditScore'
 // import Book from '@pages/Book'
 // import ModifyPassword from '@pages/ModifyPassword'
 // import ServicePhone from '@pages/ServicePhone'
@@ -40,6 +41,8 @@ ReactDOM.render(
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/home" component={Home}/>
                 <Route exact path="/personal" component={Personal}/>
+                <Route exact path="/correct_edit_score" component={CorrectEditScore}/>
+
                 {/*
 
                 <Route exact path="/modify_password" component={ModifyPassword}/>

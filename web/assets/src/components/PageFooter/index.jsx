@@ -42,7 +42,7 @@ class PageFooter extends Component {
                         <td>
                             <div onClick={this.BookClick.bind(this)}>
                                 <div><img src={this.route == '/book' ? ico_progress_active :ico_progress } className="icon"/></div>
-                                <div className={this.route == '/book' ? 'text_active': ''}>错题本</div>
+                                <div className={this.route == '/book' ? 'text_active': ''}>进度查询</div>
                             </div>
                         </td>
                         <td>
