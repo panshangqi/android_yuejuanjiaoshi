@@ -2,6 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import { message, Spin } from 'antd'
 console.log("environment: " + process.env.NODE_ENV)
+console.log("os env: " + navigator.userAgent)
 const Qishi = {};
 Qishi.config = {
     ENV: process.env.NODE_ENV,
@@ -68,10 +69,10 @@ Qishi.util = {
     wsdl_url: function(){
         var ip = Qishi.cookies.get_cookies('yuejuan_teacher_ip');
         console.log(ip)
-        // 使用可跨域Chrome浏览器
-        // if(Qishi.config.ENV == "development"){
-        //     return "/exam/AppdatacenterImpPort?wsdl";
-        // }
+        //使用可跨域Chrome浏览器
+        if(Qishi.config.ENV == "development"){
+             return "/exam/AppdatacenterImpPort?wsdl";
+        }
 
         if(ip){
             return `http://${ip}/exam/AppdatacenterImpPort?wsdl`
@@ -162,6 +163,7 @@ http://49.4.48.115
                 4: 请求已完成，且响应已就绪
                  */
                 if (xmlhttp.readyState == 4) {
+                    console.log("http status: "+xmlhttp.status)
                     if(xmlhttp.status==200){
                         var result = xmlhttp.responseText
                         if(typeof fn === 'function'){
@@ -232,6 +234,23 @@ http://49.4.48.115
         })
     }
 };
-
-
+function os_versions(){
+    let u = navigator.userAgent, app = navigator.appVersion;
+    return {
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/) || !!u.match(/AppleWebKit/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+        iPad: u.indexOf('iPad') > -1, //是否iPad
+        webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+    };
+}
+Qishi.browser = {
+    versions: os_versions()
+}
+console.log(Qishi.browser.versions)
 export default Qishi;

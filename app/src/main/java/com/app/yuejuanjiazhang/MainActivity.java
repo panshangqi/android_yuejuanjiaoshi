@@ -2,6 +2,8 @@ package com.app.yuejuanjiazhang;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
@@ -24,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import android.webkit.ValueCallback;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -31,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     WebSettings webSettings;
     WebViewClient webViewClient;
-    Button f5Btn;
+    Button f5Btn, screenDirection;
     boolean isLoadUrl  = false;
     private long time =0;
+    int rotate = 0; //0横屏 1竖屏
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webView);
         f5Btn = (Button)findViewById(R.id.f5_btn);
+        screenDirection = (Button)findViewById(R.id.screen_direction);
         //webView.loadUrl("http://baidu.com");
-
         webSettings = webView.getSettings();
         // 设置与Js交互的权限
         webSettings.setJavaScriptEnabled(true);
@@ -105,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if(!isLoadUrl){
-                    isLoadUrl = true;
-                    view.loadUrl(url);
-                    Log.v("YJ first",url);
-                }
+//                if(!isLoadUrl){
+//                    isLoadUrl = true;
+//                    view.loadUrl(url);
+//                    Log.v("YJ first",url);
+//                }
                 Log.v("YJ",url);
                 super.onPageStarted(view, url, favicon);
             }
@@ -118,16 +122,21 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("YJ","proceed Ssl");
                 handler.proceed(); // 接受所有证书
             }
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //view.loadUrl(url);
+                return true;//代表由应用处理，就是不再加载，前面已经加载了一次
+            }
 
         });
         if(Public.ENV.equals("development")){
-
+            //google浏览器输入chrome://inspect 可进行调试
             if (Build.VERSION.SDK_INT >= 19){
                 Log.v("YJ debug", "setWebContentsDebuggingEnabled true");
                 WebView.setWebContentsDebuggingEnabled(true);
             }
-            //webView.loadUrl("http://10.200.6.66:10032/templates/index.html");
-            webView.loadUrl("http://www.baidu.com");
+            webView.loadUrl("http://192.168.68.228:10033/templates/index.html");
+            //webView.loadUrl("https://www.baidu.com");
 
         }else{
             f5Btn.setVisibility(View.GONE);
@@ -140,7 +149,31 @@ public class MainActivity extends AppCompatActivity {
         webView.reload();
         Toast.makeText(MainActivity.this,"正在刷新F5.",Toast.LENGTH_SHORT).show();
     }
+    public void onRotateClick(View view){
+        if(rotate==0){
+            rotate = 1;
 
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
+        }else{
+            rotate = 0;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+        }
+        Toast.makeText(MainActivity.this,"切换.",Toast.LENGTH_SHORT).show();
+    }
+    //android 调用 js
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //Log.v("YJ Change:", String.valueOf(webView.getWidth()) +","+ Log.v("YJ Change:", String.valueOf(webView.getHeight())));
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Toast.makeText(getApplicationContext(), "横屏", Toast.LENGTH_SHORT).show();
+
+            sendEvent2HTML(webView, "YJ_SCREEN_EVENT_LANDSCAPE", "{type: 0, text: '横屏'}");
+        }else{
+            Toast.makeText(getApplicationContext(), "竖屏", Toast.LENGTH_SHORT).show();
+            sendEvent2HTML(webView, "YJ_SCREEN_EVENT_PORTRAIT", "{type: 1, text: '竖屏'}");
+        }
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -179,5 +212,27 @@ public class MainActivity extends AppCompatActivity {
     private String getPrePath(String curPath){
         int pos = curPath.lastIndexOf('/');
         return curPath.substring(0, pos);
+    }
+    private void sendEvent2HTML(final WebView webView, final String eventName, final String eventMsg){
+        if(Build.VERSION.SDK_INT >= 19){
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    String script = "var evt = document.createEvent(\"HTMLEvents\");";
+                    script += "evt.initEvent(\""+ eventName +"\", false, false);";
+                    script += "evt.message="+eventMsg+";";
+                    script += "window.dispatchEvent(evt);";
+                    webView.evaluateJavascript(script, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            //此处为 js 返回的结果
+                        }
+                    });
+                }
+            });
+        }else{
+            String errMsg = "sendEvent2HTML SDK_INT="+String.valueOf(Build.VERSION.SDK_INT);
+            Toast.makeText(MainActivity.this, errMsg, Toast.LENGTH_LONG).show();
+        }
     }
 }

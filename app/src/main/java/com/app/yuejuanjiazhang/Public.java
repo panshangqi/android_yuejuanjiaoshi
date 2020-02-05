@@ -13,3 +13,10 @@ public class Public extends Application {
         context = getApplicationContext();
     }
 }
+
+/*
+h5调试：chrome://inspect/#devices
+android模拟器连接androidStudio：adb.exe connect 127.0.0.1:62001
+
+
+ */

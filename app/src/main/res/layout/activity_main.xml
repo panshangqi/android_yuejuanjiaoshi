@@ -5,14 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <Button
-        android:id="@+id/f5_btn"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="F5"
-        android:onClick="onClick"
-        android:background="#90ffffff"
-        />
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/f5_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F5"
+            android:onClick="onClick"
+            android:background="#90ffffff"
+            />
+        <Button
+            android:id="@+id/screen_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="横屏"
+            android:onClick="onRotateClick"
+            android:background="#90ffffff"
+            />
+    </LinearLayout>
+
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -27,6 +27,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
 android.applicationVariants.all { variant ->
     variant.outputs.all { output ->
         def outputFile = output.outputFile
@@ -34,9 +35,9 @@ android.applicationVariants.all { variant ->
         def createTime = new Date().format("YYYY-MM-dd hhmmss", TimeZone.getTimeZone("GMT+08:00"))
         if (outputFile != null && outputFile.name.endsWith('.apk')) {
             if (variant.buildType.name.equals('release')) {//如果是release包
-                fileName = "yuejuan_teacher_release_${createTime}.apk"
+                fileName = "yuejuan_teacher_release.apk"
             } else if (variant.buildType.name.equals('debug')) {//如果是debug包
-                fileName = "yuejuan_teacher_debug_${createTime}.apk"
+                fileName = "yuejuan_teacher_debug.apk"
             }
             outputFileName = fileName
         }

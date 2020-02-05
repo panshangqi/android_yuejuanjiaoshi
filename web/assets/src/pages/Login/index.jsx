@@ -48,6 +48,7 @@ class Login extends Component {
         })
     }
     async loginButtonClick(){
+
         console.log(this.state.username, this.state.password, this.state.ip)
         qishi.cookies.set_cookies({
             yuejuan_teacher_ip: this.state.ip

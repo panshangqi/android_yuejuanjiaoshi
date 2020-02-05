@@ -16,13 +16,25 @@ class Home extends Component {
         this.state = {
             tab_id: 0,
             mark_list: [],
-            already_mark_list: []
+            already_mark_list: [],
+            windowWidth: $(window).width(),
+            windowHeight: $(window).height(),
+            listHeight: $(window).height() - getRealPX(208)
         }
-        this.windowWidth = $(window).width()
-        this.listHeight = $(window).height() - getRealPX(208)
         this.userinfo = {}
+
+        $(window).resize(()=>{
+
+            this.setState({
+                windowWidth: $(window).width(),
+                windowHeight: $(window).height(),
+                listHeight: $(window).height() - getRealPX(208)
+            })
+
+        })
     }
     componentDidMount(){
+
         this.callback()
     }
     componentWillUnmount(){
@@ -42,7 +54,7 @@ class Home extends Component {
             return false
         }
         if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK) {
-            qishi.util.alert(res.data.message) //本科目阅卷进程已启动
+            //qishi.util.alert(res.data.message) //本科目阅卷进程已启动
             return true
         }
         qishi.util.alert(res.data.message) //本科目阅卷进程未启动 or 服务器数据异常
@@ -65,6 +77,16 @@ class Home extends Component {
             this.AlreadyMarkCallback()
         }
     }
+    markListItemClick(item, e){
+        console.log(item)
+        if(qishi.browser.versions.android){
+            android.setScreenLandscape()
+        }
+        this.props.history.push({
+            pathname: '/correct_edit_score',
+            state: item
+        })
+    }
     //正评列表
     markListRender({key, index, style}){
 
@@ -74,9 +96,12 @@ class Home extends Component {
         let subjectName = this.userinfo.usersubject;
         let questionName = que_info.quename;
         let withoutCount = taskTotalCount - que_info.teacount;
-
+        let item = {
+            queid: que_info.queid,
+            quename: que_info.quename
+        }
         return(
-            <div className="list-item-bg" key={key} style={style}>
+            <div className="list-item-bg" key={key} style={style} onClick={this.markListItemClick.bind(this, item)}>
                 <div className="list-item">
                     <div className="item-title">
                         <div className="subject_name">{subjectName}</div>
@@ -183,8 +208,8 @@ class Home extends Component {
                         <TabPane tab="全部" key="1">
                             <div className="table-list">
                                 <List
-                                    width={this.windowWidth}
-                                    height={this.listHeight}
+                                    width={this.state.windowWidth}
+                                    height={this.state.listHeight}
                                     rowCount={this.state.mark_list.length}
                                     rowHeight={getRealPX(135)}
                                     rowRenderer={this.markListRender.bind(this)}
@@ -194,8 +219,8 @@ class Home extends Component {
                         <TabPane tab="阅卷中" key="2">
                             <div className="table-list">
                                 <List
-                                    width={this.windowWidth}
-                                    height={this.listHeight}
+                                    width={this.state.windowWidth}
+                                    height={this.state.listHeight}
                                     rowCount={this.state.mark_list.length}
                                     rowHeight={getRealPX(135)}
                                     rowRenderer={this.markListRender.bind(this)}
@@ -213,8 +238,8 @@ class Home extends Component {
                         <span style={{width: '40%'}}>时间</span>
                     </div>
                     <List
-                        width={this.windowWidth}
-                        height={this.listHeight}
+                        width={this.state.windowWidth}
+                        height={this.state.listHeight}
                         rowCount={this.state.already_mark_list.length}
                         rowHeight={getRealPX(60)}
                         rowRenderer={this.alreadyMarkListRender.bind(this)}
