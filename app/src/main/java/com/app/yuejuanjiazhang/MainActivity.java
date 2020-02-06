@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("YJ debug", "setWebContentsDebuggingEnabled true");
                 WebView.setWebContentsDebuggingEnabled(true);
             }
-            webView.loadUrl("http://192.168.68.228:10033/templates/index.html");
+            webView.loadUrl("http://192.168.8.108:10033/templates/index.html");
             //webView.loadUrl("https://www.baidu.com");
 
         }else{
