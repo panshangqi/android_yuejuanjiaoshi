@@ -83,8 +83,7 @@ class Home extends Component {
             android.setScreenLandscape()
         }
         this.props.history.push({
-            pathname: '/correct_edit_score',
-            state: item
+            pathname: `/correct_edit_score?queid=${item.queid}&quename=${item.quename}`
         })
     }
     //正评列表

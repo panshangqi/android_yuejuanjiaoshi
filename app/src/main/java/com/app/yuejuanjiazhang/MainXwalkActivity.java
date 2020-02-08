@@ -77,7 +77,7 @@ public class MainXwalkActivity extends AppCompatActivity {
 
     }
     public void onClick (View view){
-        //webView.reload();
+        mXwview.loadUrl("http://192.168.2.108:10033/templates/index.html", null);
         Toast.makeText(MainXwalkActivity.this,"正在刷新F5.",Toast.LENGTH_SHORT).show();
     }
     public void onRotateClick(View view){

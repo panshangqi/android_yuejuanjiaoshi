@@ -93,7 +93,6 @@ Qishi.util = {
         if(Qishi.config.ENV == "development"){
             return "/exam/appshowimage?path="+image_name;
         }
-
         if(ip){
             return `http://${ip}/exam/appshowimage?path=${image_name}`
         }else{
@@ -106,6 +105,16 @@ Qishi.util = {
             return `/ctb/showimage?path=${image_name}`
         }
         return `${Qishi.config.book_ip}/ctb/showimage?path=${image_name}`
+    },
+    get_search_params(search){
+        let params = {}
+        let url = search.substring(1, search.length)
+        let arrs = url.split('&')
+        for(let str of arrs){
+            let maps = str.split("=")
+            params[maps[0]] = maps[1]
+        }
+        return params
     }
 }
 

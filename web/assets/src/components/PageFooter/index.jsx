@@ -23,8 +23,8 @@ class PageFooter extends Component {
         this.props.history.push('/personal')
     }
     BookClick(){
-        if(this.route != '/book')
-            this.props.history.push('/book')
+        if(this.route != '/work_progress')
+            this.props.history.push('/work_progress')
     }
     render() {
         return (
@@ -41,8 +41,8 @@ class PageFooter extends Component {
                         </td>
                         <td>
                             <div onClick={this.BookClick.bind(this)}>
-                                <div><img src={this.route == '/book' ? ico_progress_active :ico_progress } className="icon"/></div>
-                                <div className={this.route == '/book' ? 'text_active': ''}>进度查询</div>
+                                <div><img src={this.route == '/work_progress' ? ico_progress_active :ico_progress } className="icon"/></div>
+                                <div className={this.route == '/work_progress' ? 'text_active': ''}>进度查询</div>
                             </div>
                         </td>
                         <td>

@@ -58,6 +58,7 @@ module.exports = {
                     options: {
                         globalVars:{
                             'theme_color': '#FF9647',
+                            'theme_orange':'#ffb57d',
                             'theme_red': '#FF796B',
                             'theme_green': '#13D469',
                             'theme_gray': '#f2f2f2',

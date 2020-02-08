@@ -20,6 +20,7 @@ import CorrectEditScore from '@pages/CorrectEditScore'
 // import ResultReport from '@pages/ResultReport'
 // import QuestionDetail from '@pages/QuestionDetail'
 import Home from '@pages/Home'
+import WorkProgress from "@pages/WorkProgress"
 // import ErrorBookList from '@pages/ErrorBookList'
 
 
@@ -40,6 +41,7 @@ ReactDOM.render(
             <Switch>
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/home" component={Home}/>
+                <Route exact path="/work_progress" component={WorkProgress}/>
                 <Route exact path="/personal" component={Personal}/>
                 <Route exact path="/correct_edit_score" component={CorrectEditScore}/>
 
