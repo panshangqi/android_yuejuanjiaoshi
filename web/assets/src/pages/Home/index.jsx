@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import qishi from '@components/qishi.jsx';
 import TitleBar from '@components/TitleBar'
 import PageFooter from '@components/PageFooter'
-import { Radio, Tabs } from 'antd';
+import { Radio, Tabs, Spin } from 'antd';
 import {List} from 'react-virtualized';
 import $ from 'jquery'
 import './style.less'
@@ -19,7 +19,8 @@ class Home extends Component {
             already_mark_list: [],
             windowWidth: $(window).width(),
             windowHeight: $(window).height(),
-            listHeight: $(window).height() - getRealPX(208)
+            listHeight: $(window).height() - getRealPX(208),
+            show_loading: false
         }
         this.userinfo = {}
 
@@ -79,12 +80,11 @@ class Home extends Component {
     }
     markListItemClick(item, e){
         console.log(item)
+
         if(qishi.browser.versions.android){
             android.setScreenLandscape()
         }
-        this.props.history.push({
-            pathname: `/correct_edit_score?queid=${item.queid}&quename=${item.quename}`
-        })
+        window.location.href= `#/correct_edit_score?queid=${item.queid}&quename=${item.quename}`
     }
     //正评列表
     markListRender({key, index, style}){
@@ -141,6 +141,10 @@ class Home extends Component {
     }
     async callback(key){
         console.log('list type: ', key)
+        this.setState({
+            show_loading: true,
+            mark_list: []
+        })
         let userinfo = qishi.cookies.get_userinfo()
         this.userinfo = userinfo
         let token = qishi.cookies.get_token();
@@ -148,23 +152,34 @@ class Home extends Component {
         console.log(userinfo,token, userid)
         let mark_status = await this.checkMarkStatus(userinfo.usersubjectid)
         if(!mark_status) {
+            this.setState({
+                show_loading: false
+            })
             return;
         }
         let res = await qishi.http.getSync("GetWorkprogress",[userid, token, userinfo.usersubjectid])
         console.log('正评列表')
         console.log(res)
-        if(!res || res.style == 'ERROR')
-            return;
-        if(res.data.codeid == qishi.config.responseOK){
+        if(!res || res.type == 'ERROR')
+        {
+            qishi.util.alert("网络错误")
+        }
+        else if(res.data.codeid == qishi.config.responseOK){
             this.setState({
                 mark_list: res.data.message
             })
         }else{
             qishi.util.alert(res.data.message)
         }
+        this.setState({
+            show_loading: false
+        })
     }
     //回评列表
     async AlreadyMarkCallback(){
+        this.setState({
+            show_loading: true
+        })
         let userinfo = qishi.cookies.get_userinfo()
         this.userinfo = userinfo
         let token = qishi.cookies.get_token();
@@ -173,13 +188,22 @@ class Home extends Component {
         let mark_status = await this.checkMarkStatus(userinfo.usersubjectid)
         console.log(mark_status)
         if(!mark_status) {
+            this.setState({
+                show_loading: false
+            })
             return;
         }
         let res = await qishi.http.getSync("GetAlreadymarklist",[userid, token, userinfo.usersubjectid])
         console.log('回评列表')
         console.log(res)
-        if(!res || res.style == 'ERROR')
+        this.setState({
+            show_loading: false
+        })
+        if(!res || res.type == 'ERROR')
+        {
+            qishi.util.alert("网络错误")
             return;
+        }
         if(res.data.codeid == qishi.config.responseOK){
             this.setState({
                 already_mark_list: res.data.message
@@ -187,6 +211,7 @@ class Home extends Component {
         }else{
             qishi.util.alert(res.data.message)
         }
+
     }
     render() {
         return (
@@ -246,6 +271,9 @@ class Home extends Component {
                 </div>
 
                 <PageFooter route="/home" history={this.props.history}/>
+                <div className="loading_gif" style={{display: this.state.show_loading ? 'block': 'none'}}>
+                    <Spin size="large"/>
+                </div>
             </div>
         );
     }

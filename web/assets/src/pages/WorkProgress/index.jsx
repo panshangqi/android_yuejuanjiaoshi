@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {Button, Input } from 'antd'
+import {Button, Input, Spin} from 'antd'
 import {List} from 'react-virtualized';
 import './style.less';
 import qishi from '@components/qishi'
@@ -15,7 +15,8 @@ class WorkProgress extends Component {
         this.state = {
             ques_list: [],
             windowWidth: $(window).width(),
-            listHeight: $(window).height() - getRealPX(100)
+            listHeight: $(window).height() - getRealPX(100),
+            show_loading: false
         };
 
         this.userinfo = {}
@@ -30,24 +31,30 @@ class WorkProgress extends Component {
         this.updateWorkProgress()
     }
     async updateWorkProgress(){
+        this.setState({
+            show_loading: true
+        })
         let userinfo = qishi.cookies.get_userinfo()
         let token = qishi.cookies.get_token();
         let userid = qishi.cookies.get_userid();
         let res = await qishi.http.getSync("GetWorkprogress", [userid, token, userinfo.usersubjectid])
         console.log('阅卷进度')
         console.log(res)
+        this.setState({
+            show_loading: false
+        })
         this.userinfo = userinfo
         if(!res || res.type == 'ERROR'){
             qishi.util.alert("网络错误")
-            return false
+            return
         }
         if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK) {
             //qishi.util.alert(res.data.message) //本科目阅卷进程已启动
             this.setState({
                 ques_list: res.data.message
             })
-            return true
         }
+
     }
     subjectClick(item){
 
@@ -118,6 +125,9 @@ class WorkProgress extends Component {
                     />
                 </div>
                 <PageFooter route="/work_progress" history={this.props.history}/>
+                <div className="loading_gif" style={{display: this.state.show_loading ? 'block': 'none'}}>
+                    <Spin size="large"/>
+                </div>
             </div>
         );
     }

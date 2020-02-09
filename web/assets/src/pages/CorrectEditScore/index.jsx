@@ -16,6 +16,8 @@ import canvas_pen from "@imgs/canvas_pen.png"
 import canvas_pen_active from "@imgs/canvas_pen_active.png"
 import canvas_wrong from "@imgs/canvas_wrong.png"
 import canvas_wrong_active from "@imgs/canvas_wrong_active.png"
+import down_arrow from "@imgs/down_arrow.png"
+import up_arrow from "@imgs/up_arrow.png"
 
 class ServicePhone extends Component {
     constructor(props) {
@@ -127,10 +129,7 @@ class ServicePhone extends Component {
         {
             android.setScreenPortrait()
         }
-        this.props.history.push({
-            pathname: '/home'
-        })
-
+        window.location.href = '#/home'
     }
     render() {
         return (
@@ -152,14 +151,34 @@ class ServicePhone extends Component {
 
                         {/*标注按钮*/}
                         <div className="label_panel">
-                            <div>
-                                <img src={canvas_pen}/>
-                                <img src={canvas_delete}/>
-                                <img src={canvas_dui}/>
-                                <img src={canvas_bandui}/>
-                                <img src={canvas_wrong}/>
+                            <div className="label_bg">
+                                <div className="label_buttons" id="label_buttons">
+                                    <img src={canvas_pen}/>
+                                    <img src={canvas_delete}/>
+                                    <img src={canvas_dui}/>
+                                    <img src={canvas_bandui}/>
+                                    <img src={canvas_wrong}/>
+                                </div>
                             </div>
-                            <div className="hide_btn"></div>
+                            <div className="hide_btn">
+                                <img src={down_arrow} id="label_hide_btn" hide="false" onClick={function(){
+                                    console.log(10)
+                                    if($('#label_hide_btn').attr('hide') == 'false'){
+                                        $('#label_hide_btn').attr('hide', 'true')
+                                        //$('#label_hide_btn').css('background-image','url('+up_arrow+')')
+                                        $('#label_hide_btn').css('transform', 'rotateX(180deg)')
+                                        $('#label_buttons').css('height','0')
+                                    }else{
+                                        $('#label_hide_btn').attr('hide', 'false')
+
+                                        //$('#label_hide_btn').css('background-image','url('+down_arrow+')')
+                                        $('#label_hide_btn').css('transform', 'rotateX(0deg)')
+                                        $('#label_buttons').css('height',getRealPX(82)+'px')
+                                    }
+
+
+                                }}/>
+                            </div>
                         </div>
                     </div>
                     <div className="mid" style={{height: this.state.contentHeight}}>
