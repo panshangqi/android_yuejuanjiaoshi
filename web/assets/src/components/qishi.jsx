@@ -57,7 +57,7 @@ Qishi.util = {
 
     alert:function(msg){
         message.config({
-            top: $(window).height() - 200
+            top: $(window).height()*0.5
         })
         message.warning(msg);
     },

@@ -1,0 +1,83 @@
+//打分板
+.score_panel_html{
+	width: 60px;
+	.score_show{
+		color: #fff;
+		font-size: 11px;
+		text-align: center;
+		margin-top: 6px;
+		span{
+			font-size: 16px;
+		}
+	}
+	.score_keys{
+		display: flex;
+		justify-content: space-around;
+		color:#646464;
+		flex-wrap: wrap;
+		.skey{
+			width: 24px;
+			font-size: 11px;
+			background-color: #fff;
+			border-radius: 4px;
+			text-align: center;
+			margin-top: 4px;
+			transition: background-color .4s;
+			&:active{
+				background-color: #aaa;
+				box-shadow: 0 0 3px #fff;
+			}
+		}
+		img{
+			width: 17px;
+			height: 11px;
+			vertical-align: top;
+			margin-top: 2.5px;
+		}
+	}
+	.btns_box{
+		display: flex;
+		flex-wrap: wrap;
+		color: #fff;
+		font-size: 9px;
+		justify-content: space-around;
+		margin-top: 4px;
+		.active_status{
+			transition: background-color .4s;
+			&:active{
+				background-color: #555;
+				box-shadow: 0 0 4px #fff;
+			}
+		}
+		.full_btn{
+			width: 24px;
+			height: 24px;
+			text-align: center;
+			line-height: 24px;
+			border-radius: 24px;
+			background-color: #4d8e30;
+			.active_status;
+		}
+		.zero_btn{
+			width: 24px;
+			height: 24px;
+			text-align: center;
+			line-height: 24px;
+			border-radius: 24px;
+			background-color: #ff0002;
+			.active_status;
+		}
+		.submit_btn{
+			width: 34px;
+			height: 34px;
+			text-align: center;
+			line-height: 34px;
+			border-radius: 34px;
+			background-color: #56cee3;
+			margin-top: 4px;
+			font-size: 12px;
+			.active_status;
+		}
+	}
+
+}

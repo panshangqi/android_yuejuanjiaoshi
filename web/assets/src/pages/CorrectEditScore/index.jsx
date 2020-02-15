@@ -1,23 +1,14 @@
 
 import React, { Component } from 'react';
 import qishi from '@components/qishi.jsx';
+import LabelSideBar from '@components/CorrectEditScoreCom/LabelSideBar'
+import HeadMenuBar from '@components/CorrectEditScoreCom/HeadMenuBar'
+import ScorePanel from '@components/CorrectEditScoreCom/ScorePanel'
 import './style.less'
 import $ from "jquery";
 import {List} from "react-virtualized";
 
 import toback_white from '@imgs/toback_white.png'
-import canvas_bandui from "@imgs/canvas_bandui.png"
-import canvas_bandui_active from "@imgs/canvas_bandui_active.png"
-import canvas_delete from "@imgs/canvas_delete.png"
-import canvas_delete_active from "@imgs/canvas_delete_active.png"
-import canvas_dui from "@imgs/canvas_dui.png"
-import canvas_dui_active from "@imgs/canvas_dui_active.png"
-import canvas_pen from "@imgs/canvas_pen.png"
-import canvas_pen_active from "@imgs/canvas_pen_active.png"
-import canvas_wrong from "@imgs/canvas_wrong.png"
-import canvas_wrong_active from "@imgs/canvas_wrong_active.png"
-import down_arrow from "@imgs/down_arrow.png"
-import up_arrow from "@imgs/up_arrow.png"
 
 class ServicePhone extends Component {
     constructor(props) {
@@ -38,27 +29,11 @@ class ServicePhone extends Component {
                 contentHeight: $(window).height() - getRealPX(26)
             })
         })
-
     }
     componentDidMount(){
         this.getExamTaskQuesInfo()
         this.getNextTask(this.selected_queid)
-        $('#menu_list').on('click',".btn", function () {
-            $('#menu_list').find('.btn').css('color', '#fff')
-            $('#op_panel').find('.panel').css('display', "none")
-            let check = $(this).attr('check')
-            let type = $(this).attr('type')
-            if(check == 'true'){
-                $(this).css('color', '#fff')
-                $(this).attr('check', "false")
-                $('#op_panel').find('.panel_'+type).css('display','none')
-            }else{
-                $(this).css('color', '#f00')
-                $(this).attr('check', "true")
-                $('#op_panel').find('.panel_'+type).css('display','block')
-            }
 
-        })
     }
     componentWillUnmount(){
 
@@ -131,6 +106,23 @@ class ServicePhone extends Component {
         }
         window.location.href = '#/home'
     }
+    onLabelClick(type, event){
+
+        console.log(type)
+    }
+    onMenuClick(item){
+        console.log(item)
+        if(item.active){
+            $('#op_panel').find('.ques_list').hide()
+            $('#op_panel').find('.panel_'+item.type).show()
+        }else{
+            $('#op_panel').find('.panel_'+item.type).hide()
+        }
+    }
+    //自定义面板打分
+    scoreClick(num){
+        console.log(num)
+    }
     render() {
         return (
             <div className="correct_edit_score_html">
@@ -140,46 +132,12 @@ class ServicePhone extends Component {
                         <span className="que_name">{"第四题"}</span>
                     </div>
                     <div className="right_box" id="menu_list">
-                        <div className="btn" type={0} check="false">提交仲裁</div>
-                        <div className="btn" type={1} check="false">阅卷记录</div>
-                        <div className="btn" type={2} check="false">打分版</div>
-                        <div className="btn" type={3} check="false">选题</div>
+                        <HeadMenuBar onMenuClick={this.onMenuClick.bind(this)}/>
                     </div>
                 </div>
                 <div className="content">
                     <div className="left">
-
-                        {/*标注按钮*/}
-                        <div className="label_panel">
-                            <div className="label_bg">
-                                <div className="label_buttons" id="label_buttons">
-                                    <img src={canvas_pen}/>
-                                    <img src={canvas_delete}/>
-                                    <img src={canvas_dui}/>
-                                    <img src={canvas_bandui}/>
-                                    <img src={canvas_wrong}/>
-                                </div>
-                            </div>
-                            <div className="hide_btn">
-                                <img src={down_arrow} id="label_hide_btn" hide="false" onClick={function(){
-                                    console.log(10)
-                                    if($('#label_hide_btn').attr('hide') == 'false'){
-                                        $('#label_hide_btn').attr('hide', 'true')
-                                        //$('#label_hide_btn').css('background-image','url('+up_arrow+')')
-                                        $('#label_hide_btn').css('transform', 'rotateX(180deg)')
-                                        $('#label_buttons').css('height','0')
-                                    }else{
-                                        $('#label_hide_btn').attr('hide', 'false')
-
-                                        //$('#label_hide_btn').css('background-image','url('+down_arrow+')')
-                                        $('#label_hide_btn').css('transform', 'rotateX(0deg)')
-                                        $('#label_buttons').css('height',getRealPX(82)+'px')
-                                    }
-
-
-                                }}/>
-                            </div>
-                        </div>
+                        <div><LabelSideBar onLabelClick={this.onLabelClick.bind(this)}/></div>
                     </div>
                     <div className="mid" style={{height: this.state.contentHeight}}>
                         <img src={this.state.image_url}/>
@@ -207,15 +165,14 @@ class ServicePhone extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="ques_list panel_0" style={{height: this.state.contentHeight}}>
-                        </div>
                         <div className="ques_list panel_1" style={{height: this.state.contentHeight}}>
                         </div>
                         <div className="ques_list panel_2" style={{height: this.state.contentHeight}}>
                         </div>
-                        <div className="ques_list panel_3" style={{
-                            height: this.state.contentHeight
-                        }}>
+                        <div className="ques_list panel_3" style={{height: this.state.contentHeight}}>
+                            <ScorePanel/>
+                        </div>
+                        <div className="ques_list panel_4" style={{height: this.state.contentHeight}}>
                             <List
                                 width={getRealPX(60)}
                                 height={this.state.contentHeight}
