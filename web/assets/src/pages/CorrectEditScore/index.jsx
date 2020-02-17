@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import qishi from '@components/qishi.jsx';
+import {Scrollbars} from 'react-custom-scrollbars'
 import LabelSideBar from '@components/CorrectEditScoreCom/LabelSideBar'
 import HeadMenuBar from '@components/CorrectEditScoreCom/HeadMenuBar'
 import ScorePanel from '@components/CorrectEditScoreCom/ScorePanel'
@@ -9,6 +10,7 @@ import $ from "jquery";
 import {List} from "react-virtualized";
 
 import toback_white from '@imgs/toback_white.png'
+import MyCanvas from './my_canvas'
 
 class ServicePhone extends Component {
     constructor(props) {
@@ -17,6 +19,9 @@ class ServicePhone extends Component {
             image_url: null,
             ques_list: [],
             score_points_list: [],
+            already_mark_list: [],
+            canvas_height: 0,
+            canvas_width: 0,
             contentHeight: $(window).height() - getRealPX(26)
         }
         this.windowWidth = $(window).width()
@@ -33,7 +38,9 @@ class ServicePhone extends Component {
     componentDidMount(){
         this.getExamTaskQuesInfo()
         this.getNextTask(this.selected_queid)
+        this.getAleadyMarkList()
 
+        this.myCanvas = new MyCanvas('main_canvas', 'main_box')
     }
     componentWillUnmount(){
 
@@ -96,6 +103,35 @@ class ServicePhone extends Component {
             return true
         }
     }
+    //获取已评列表
+    async getAleadyMarkList(){
+        let token = qishi.cookies.get_token();
+        let userid = qishi.cookies.get_userid();
+        let userinfo = qishi.cookies.get_userinfo()
+        let res = await qishi.http.getSync("GetAlreadymarklist", [userid, token, userinfo.usersubjectid])
+        console.log('获取已评列表')
+        console.log(res)
+        if(!res || res.type == 'ERROR'){
+            qishi.util.alert("网络错误")
+            return false
+        }
+        if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK) {
+            this.setState({
+                already_mark_list: res.data.message
+            })
+        }
+    }
+    onImgLoad(){
+        let imgW = $('#main_image').width();
+        let imgH = $('#main_image').height();
+
+        console.log('图片加载完成', imgW, imgH)
+        // $('#main_canvas').css({
+        //     width: imgW + 'px',
+        //     height: imgH + 'px'
+        // })
+        this.myCanvas.setWH(imgW, imgH)
+    }
     screenRotate(event){
         console.log('屏幕翻转', event.message)
     }
@@ -106,18 +142,46 @@ class ServicePhone extends Component {
         }
         window.location.href = '#/home'
     }
-    onLabelClick(type, event){
-
-        console.log(type)
+    onLabelClick(res, event){
+        console.log(res)
+        if(res.type == 'pen') {
+            if(res.active) {
+                this.myCanvas.drawLine()
+                console.log('开始自由画笔')
+            }
+            else {
+                this.myCanvas.cancelDrawLine()
+                console.log('停止自由画笔')
+            }
+        }
+        else if(res.type == 'dui'){
+            if(res.active)
+                this.myCanvas.drawDui()
+            else
+                this.myCanvas.cancelDrawDui()
+        }
+        else if(res.type == 'bandui'){
+            if(res.active)
+                this.myCanvas.drawBandui()
+            else
+                this.myCanvas.cancelDrawBandui()
+        }
+        else if(res.type == 'wrong'){
+            if(res.active)
+                this.myCanvas.drawWrong()
+            else
+                this.myCanvas.cancelDrawWrong()
+        }
     }
     onMenuClick(item){
         console.log(item)
         if(item.active){
-            $('#op_panel').find('.ques_list').hide()
+            $('#op_panel').find('.panel_bg').hide()
             $('#op_panel').find('.panel_'+item.type).show()
         }else{
             $('#op_panel').find('.panel_'+item.type).hide()
         }
+
     }
     //自定义面板打分
     scoreClick(num){
@@ -139,8 +203,10 @@ class ServicePhone extends Component {
                     <div className="left">
                         <div><LabelSideBar onLabelClick={this.onLabelClick.bind(this)}/></div>
                     </div>
-                    <div className="mid" style={{height: this.state.contentHeight}}>
-                        <img src={this.state.image_url}/>
+                    <div className="mid" id="main_box" style={{height: this.state.contentHeight}}>
+
+                            <img src={this.state.image_url} id="main_image" onLoad={this.onImgLoad.bind(this)}/>
+                            <canvas id="main_canvas" className="main_canvas"></canvas>
                     </div>
                     <div className="right" id="op_panel">
                         <div>
@@ -165,14 +231,39 @@ class ServicePhone extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="ques_list panel_1" style={{height: this.state.contentHeight}}>
+                        <div className="ques_list panel_1 panel_bg" style={{height: this.state.contentHeight}}>
                         </div>
-                        <div className="ques_list panel_2" style={{height: this.state.contentHeight}}>
+                        <div className="record_list panel_2 panel_bg" style={{height: this.state.contentHeight}}>
+                            <div className="item-wrap head-wrap">
+                                <span>序号</span>
+                                <span>评分</span>
+                            </div>
+                            <List
+                                width={getRealPX(60)}
+                                height={this.state.contentHeight}
+                                rowCount={this.state.already_mark_list.length}
+                                rowHeight={getRealPX(22)}
+                                rowRenderer={({key, index, style})=>{
+                                    let data = this.state.already_mark_list[index]
+                                    let params = {
+                                        order: index+1,
+                                        score: data.firstmark,
+                                        secretid: data.secretid,
+                                        quename: data.quename
+                                    }
+                                    return (
+                                        <div className="item-wrap" style={style} key={key}>
+                                            <span>{params.order}</span>
+                                            <span style={{color:'#f00'}}>{params.score}</span>
+                                        </div>
+                                    )
+                                }}
+                            />
                         </div>
-                        <div className="ques_list panel_3" style={{height: this.state.contentHeight}}>
+                        <div className="ques_list panel_3 panel_bg" style={{height: this.state.contentHeight}}>
                             <ScorePanel/>
                         </div>
-                        <div className="ques_list panel_4" style={{height: this.state.contentHeight}}>
+                        <div className="ques_list panel_4 panel_bg" style={{height: this.state.contentHeight}}>
                             <List
                                 width={getRealPX(60)}
                                 height={this.state.contentHeight}

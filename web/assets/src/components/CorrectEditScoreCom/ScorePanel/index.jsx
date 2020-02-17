@@ -76,7 +76,7 @@ class ScorePanelCom extends Component {
                     {
                         [0,1,2,3,4,5,6,7,8,9,'.'].map((val)=>{
                             return (
-                                <div className="skey" onClick={this.scoreClick.bind(this, val)}>{val}</div>
+                                <div className="skey" key={'skey'+val} onClick={this.scoreClick.bind(this, val)}>{val}</div>
                             )
                         })
                     }

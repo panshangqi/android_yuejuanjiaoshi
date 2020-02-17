@@ -51,9 +51,18 @@ class LabelSiderBarCom extends Component {
         if(this.type_active != type){
             let params = {}
             if(this.type_active)
+            {
                 params[this.type_active+'_active'] = false
+                this.showDrawLabel({
+                    type: this.type_active,
+                    active: false
+                })
+            }
             params[type+'_active'] = true
-            this.showDrawLabel(type)
+            this.showDrawLabel({
+                type: type,
+                active: true
+            })
             this.setState(params)
             this.type_active = type
         }else{
@@ -61,11 +70,18 @@ class LabelSiderBarCom extends Component {
                 let params = {}
                 params[type+'_active'] = false
                 this.setState(params)
+                this.showDrawLabel({
+                    type: type,
+                    active: false
+                })
             }else{
                 let params = {}
                 params[type+'_active'] = true
-                this.showDrawLabel(type)
                 this.setState(params)
+                this.showDrawLabel({
+                    type: type,
+                    active: true
+                })
             }
 
         }
