@@ -1,0 +1,39 @@
+.yes_no_dialog_html{
+
+}
+.cancel_ok_modal{
+	.ant-modal-header{
+		display: none;
+	}
+	.title{
+		text-align: center;
+		color: @theme_color;
+		font-size: 11px;
+		padding-top: 4px;
+		padding-bottom: 2px;
+	}
+	.content{
+		font-size: 9px;
+		padding: 0px 10px 5px;
+	}
+	.footer{
+		border-top: 1px solid #ddd;
+		text-align: center;
+		color: @theme_color;
+		font-size: 11px;
+		padding-bottom: 4px;
+		padding-top: 3px;
+		transition: background-color .7s;
+		&:active{
+			background-color: fadeout(@theme_color, 20%);
+		}
+	}
+	.ant-modal-content{
+		width: 80%;
+		margin: 0 auto;
+	}
+	.ant-modal-body{
+		padding: 0;
+	}
+
+}

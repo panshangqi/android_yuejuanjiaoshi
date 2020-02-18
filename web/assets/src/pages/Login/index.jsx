@@ -23,7 +23,7 @@ class Login extends Component {
         //1002 888888 27.128.200.195:8098
     }
     componentDidMount(){
-
+        console.log(window)
     }
 
     componentWillUnmount(){
@@ -84,7 +84,8 @@ class Login extends Component {
         qishi.cookies.set_cookies({
             yuejuan_teacher_userinfo: JSON.stringify(userinfo)
         })
-        this.props.history.push('/home')
+        //this.props.history.push('/home')
+        window.location.href = '#/home'
     }
     render() {
         return (

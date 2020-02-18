@@ -1,4 +1,4 @@
-package com.app.yuejuanjiazhang;
+package com.app.yuejuanteacher;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.xwalk.core.XWalkPreferences;
+import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 
 public class MainXwalkActivity extends AppCompatActivity {
@@ -50,6 +51,7 @@ public class MainXwalkActivity extends AppCompatActivity {
 
         mXwview = (XWalkView) findViewById(R.id.xWalkWebView);
         mXwview.addJavascriptInterface(new JSInterface(),"android");
+
         //添加对javascript支持
         XWalkPreferences.setValue("enable-javascript", true);
 
@@ -67,17 +69,29 @@ public class MainXwalkActivity extends AppCompatActivity {
         {
             //开启调式,支持谷歌浏览器调式
             XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
-            mXwview.loadUrl("http://192.168.2.108:10033/templates/index.html", null);
+            mXwview.loadUrl("http://192.168.8.108:10033/templates/index.html", null);
 
         }else{
             mXwview.loadUrl("file:///android_asset/build/templates/index.html", null);
         }
 
+        mXwview.setUIClient(new XWalkUIClient(mXwview){
+            @Override
+            public void onPageLoadStarted(XWalkView view, String url) {
+                super.onPageLoadStarted(view, url);
 
+            }
+            @Override
+            public void onPageLoadStopped(XWalkView view, String url, LoadStatus status) {
+                super.onPageLoadStopped(view, url, status);
+                Log.v("YJ finish", url);
+                mXwview.load("javascript:window.yuejuanteacher=true;", null);
+            }
+        });
 
     }
     public void onClick (View view){
-        mXwview.loadUrl("http://192.168.2.108:10033/templates/index.html", null);
+        mXwview.loadUrl("http://192.168.6.108:10033/templates/index.html", null);
         Toast.makeText(MainXwalkActivity.this,"正在刷新F5.",Toast.LENGTH_SHORT).show();
     }
     public void onRotateClick(View view){
@@ -95,7 +109,6 @@ public class MainXwalkActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -124,7 +137,7 @@ public class MainXwalkActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
+    //防止内存泄漏
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
@@ -149,6 +162,19 @@ public class MainXwalkActivity extends AppCompatActivity {
         if (mXwview != null) {
             mXwview.resumeTimers();
             mXwview.onShow();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mXwview != null) {
+            mXwview.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (mXwview != null) {
+            mXwview.onNewIntent(intent);
         }
     }
 

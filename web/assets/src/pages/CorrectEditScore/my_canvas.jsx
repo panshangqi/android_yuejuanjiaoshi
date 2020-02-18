@@ -11,14 +11,17 @@ class MyCanvas{
         this.isDrawDui = false
         this.isDrawBandui = false
         this.isDrawWrong = false
-        this.offsetLeft = this.canvas.parentElement.offsetLeft
-        this.offsetTop = this.canvas.parentElement.offsetTop
+        this.offsetLeft = this.box.offsetLeft
+        this.offsetTop = this.box.offsetTop
         this.old_point = {x:0, y: 0}
         this.new_point = {x:0, y: 0}
+
         this.canvas.ontouchstart = (e) => {
+            console.log(e)
             this.old_point.x = e.touches[0].pageX - this.offsetLeft
             this.old_point.y = e.touches[0].pageY - this.offsetTop + this.box.scrollTop
-            console.log(this.old_point)
+            console.log(e.touches[0].pageX, e.touches[0].pageY)
+            console.log(this.offsetLeft, this.offsetTop)
 
             if(this.isDrawDui){
                 let first = {

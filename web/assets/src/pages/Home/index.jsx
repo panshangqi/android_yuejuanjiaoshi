@@ -14,7 +14,7 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tab_id: 0,
+            tab_id: '0',
             mark_list: [],
             already_mark_list: [],
             windowWidth: $(window).width(),
@@ -22,6 +22,9 @@ class Home extends Component {
             listHeight: $(window).height() - getRealPX(208),
             show_loading: false
         }
+        this.url_params = qishi.util.get_search_params(props.location.search)
+        console.log(this.url_params)
+        this.mark_type = typeof this.url_params.type == 'undefined' ? '0': this.url_params.type
         this.userinfo = {}
 
         $(window).resize(()=>{
@@ -35,8 +38,12 @@ class Home extends Component {
         })
     }
     componentDidMount(){
+        if(this.mark_type == '0'){
+            this.callback()
+        }else{
+            this.onTabsChange({target: {value: this.mark_type}})
+        }
 
-        this.callback()
     }
     componentWillUnmount(){
 
@@ -78,13 +85,34 @@ class Home extends Component {
             this.AlreadyMarkCallback()
         }
     }
+    //正评列表点击事件
     markListItemClick(item, e){
         console.log(item)
-
-        if(qishi.browser.versions.android){
+        let url = `#/correct_edit_score?queid=${item.queid}&quename=${item.quename}&type=0`
+        if(window.yuejuanteacher){
+            $(window).resize(()=>{
+                window.location.href= url
+            })
             android.setScreenLandscape()
+
+        }else{
+            window.location.href= url
         }
-        window.location.href= `#/correct_edit_score?queid=${item.queid}&quename=${item.quename}`
+
+    }
+    //回评列表点击事件
+    onAlreadyMarkClick(item, e){
+        console.log(item)
+        let url = `#/correct_edit_score?secretid=${item.secretid}&quename=${item.quename}&type=1`
+        if(window.yuejuanteacher){
+            $(window).resize(()=>{
+                window.location.href= url
+            })
+            android.setScreenLandscape()
+
+        }else{
+            window.location.href= url
+        }
     }
     //正评列表
     markListRender({key, index, style}){
@@ -132,7 +160,7 @@ class Home extends Component {
         let que_time = data.submittime;
         let secretid = data.secretid;
         return (
-            <div key={key} style={style} className="already-item">
+            <div key={key} style={style} className="already-item" onClick={this.onAlreadyMarkClick.bind(this, {secretid, quename})}>
                 <span style={{width: '30%'}}>{quename}</span>
                 <span style={{width: '30%'}}>{que_score}</span>
                 <span style={{width: '40%'}}>{que_time}</span>
@@ -222,8 +250,8 @@ class Home extends Component {
                                  onChange={this.onTabsChange.bind(this)}
                                  buttonStyle="solid"
                                  defaultValue="a">
-                        <Radio.Button value={0}>正评列表</Radio.Button>
-                        <Radio.Button value={1}>回评列表</Radio.Button>
+                        <Radio.Button value='0'>正评列表</Radio.Button>
+                        <Radio.Button value='1'>回评列表</Radio.Button>
                     </Radio.Group>
                 </div>
                 {/*正评页面*/}

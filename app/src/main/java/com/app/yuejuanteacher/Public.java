@@ -1,4 +1,4 @@
-package com.app.yuejuanjiazhang;
+package com.app.yuejuanteacher;
 
 import android.app.Application;
 import android.content.Context;
