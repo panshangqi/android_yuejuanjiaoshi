@@ -9,7 +9,12 @@ class DialogCom extends Component {
         super(props);
         this.state = {
             visible: false,
+            title: props.title ? props.title : "提示",
             message: props.message,
+            hideOK: props.hideOK ? props.hideOK : false,
+            hideCancel: props.hideCancel ? props.hideCancel : false,
+            okText: props.okText ? props.okText : 'OK',
+            canelText: props.cancelText ? props.cancelText : 'Cancel',
             modelWidth: 100
         }
         this.callback = null
@@ -47,13 +52,36 @@ class DialogCom extends Component {
             visible: false,
         });
     };
-    onClick(){
+    onClick(name){
         setTimeout(()=>{
-            this.hideModal()
             if(typeof this.callback == 'function'){
-                this.callback()
+                this.callback(name)
             }
+            this.hideModal()
         },300)
+    }
+    footRender(){
+        let arr = []
+        if(!this.state.hideCancel){
+            arr.push(
+                <div className="btn cancel" onClick={this.onClick.bind(this, 'cancel')} key={1}>{this.state.canelText}</div>
+            )
+        }
+        if(!this.state.hideOK && !this.state.hideCancel){
+            arr.push(
+                <div className="line" key={2}></div>
+            )
+        }
+        if(!this.state.hideOK){
+            arr.push(
+                <div className="btn" onClick={this.onClick.bind(this, 'ok')} key={0}>{this.state.okText}</div>
+            )
+        }
+        return (
+            <div className="footer">
+                { arr }
+            </div>
+        )
     }
     render() {
         return (
@@ -72,9 +100,8 @@ class DialogCom extends Component {
             >
                 <div className="title">温馨提示</div>
                 <div className="content">{this.state.message}</div>
-                <div className="footer" onClick={this.onClick.bind(this)}>
-                    确定
-                </div>
+                {this.footRender()}
+
             </Modal>
 
         );

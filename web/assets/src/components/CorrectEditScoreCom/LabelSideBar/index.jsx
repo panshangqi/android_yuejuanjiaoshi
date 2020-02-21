@@ -4,18 +4,20 @@ import qishi from '@components/qishi.jsx';
 import $ from 'jquery'
 import './style.less'
 
-import canvas_bandui from "@imgs/canvas_bandui.png"
-import canvas_bandui_active from "@imgs/canvas_bandui_active.png"
-import canvas_delete from "@imgs/canvas_delete.png"
-import canvas_delete_active from "@imgs/canvas_delete_active.png"
-import canvas_dui from "@imgs/canvas_dui.png"
-import canvas_dui_active from "@imgs/canvas_dui_active.png"
-import canvas_pen from "@imgs/canvas_pen.png"
-import canvas_pen_active from "@imgs/canvas_pen_active.png"
-import canvas_wrong from "@imgs/canvas_wrong.png"
-import canvas_wrong_active from "@imgs/canvas_wrong_active.png"
+import edit_bandui from "@imgs/edit_bandui.png"
+import edit_delete from "@imgs/edit_delete.png"
+import edit_dui from "@imgs/edit_dui.png"
+import edit_pen from "@imgs/edit_pen.png"
+import edit_wrong from "@imgs/edit_wrong.png"
 import down_arrow from "@imgs/down_arrow.png"
-import up_arrow from "@imgs/up_arrow.png"
+
+let icons = {
+    pen: edit_pen,
+    delete: edit_delete,
+    dui: edit_dui,
+    bandui: edit_bandui,
+    wrong: edit_wrong,
+}
 
 class LabelSiderBarCom extends Component {
     constructor(props) {
@@ -58,7 +60,11 @@ class LabelSiderBarCom extends Component {
                     active: false
                 })
             }
+
             params[type+'_active'] = true
+            if(type == 'delete'){
+                params[type+'_active'] = false
+            }
             this.showDrawLabel({
                 type: type,
                 active: true
@@ -77,13 +83,15 @@ class LabelSiderBarCom extends Component {
             }else{
                 let params = {}
                 params[type+'_active'] = true
+                if(type == 'delete'){
+                    params[type+'_active'] = false
+                }
                 this.setState(params)
                 this.showDrawLabel({
                     type: type,
                     active: true
                 })
             }
-
         }
     }
     showDrawLabel(type){
@@ -99,11 +107,19 @@ class LabelSiderBarCom extends Component {
                 <div className="label_panel">
                     <div className="label_bg">
                         <div className="label_buttons" id="label_buttons">
-                            <img src={this.state.pen_active ? canvas_pen_active: canvas_pen} className="pen" onClick={this.labelBtnClick.bind(this,"pen")}/>
-                            <img src={this.state.delete_active? canvas_delete_active: canvas_delete} className="delete" onClick={this.labelBtnClick.bind(this,"delete")}/>
-                            <img src={this.state.dui_active? canvas_dui_active: canvas_dui} className="dui" onClick={this.labelBtnClick.bind(this,"dui")}/>
-                            <img src={this.state.bandui_active? canvas_bandui_active: canvas_bandui} className="bandui" onClick={this.labelBtnClick.bind(this,"bandui")}/>
-                            <img src={this.state.wrong_active? canvas_wrong_active: canvas_wrong} className="wrong" onClick={this.labelBtnClick.bind(this,"wrong")}/>
+                            {
+                                ['pen', 'delete', 'dui', 'bandui', 'wrong'].map((name)=>{
+                                    let active_key = name+"_active"
+                                    return (
+                                        <img
+                                            key={name}
+                                            src={icons[name]}
+                                            className={name+(this.state[active_key] ? " active": "")}
+                                            onClick={this.labelBtnClick.bind(this,name)}
+                                        />
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                     <div className="hide_btn">

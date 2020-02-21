@@ -16,6 +16,8 @@ class MyCanvas{
         this.old_point = {x:0, y: 0}
         this.new_point = {x:0, y: 0}
 
+        this.isEdit = false // 是否编辑过画布
+
         this.canvas.ontouchstart = (e) => {
             console.log(e)
             this.old_point.x = e.touches[0].pageX - this.offsetLeft
@@ -44,6 +46,7 @@ class MyCanvas{
                 this.ctx.moveTo(second.x, second.y)
                 this.ctx.lineTo(third.x, third.y)
                 this.ctx.stroke()
+                this.isEdit = true
             }else if(this.isDrawBandui){
                 let first = {
                     x: this.old_point.x - getRealPX(8),
@@ -78,6 +81,7 @@ class MyCanvas{
                 this.ctx.moveTo(four.x, four.y)
                 this.ctx.lineTo(five.x, five.y)
                 this.ctx.stroke()
+                this.isEdit = true
             }
             else if(this.isDrawWrong){
                 let first = {
@@ -105,6 +109,7 @@ class MyCanvas{
                 this.ctx.moveTo(third.x, third.y)
                 this.ctx.lineTo(four.x, four.y)
                 this.ctx.stroke()
+                this.isEdit = true
             }
         }
         this.canvas.ontouchmove = (e) => {
@@ -118,6 +123,7 @@ class MyCanvas{
             this.ctx.stroke()
             this.old_point.x = this.new_point.x
             this.old_point.y = this.new_point.y
+            this.isEdit = true
         }
         this.canvas.ontouchend = (e) => {
             console.log('ontouchend')
@@ -135,6 +141,15 @@ class MyCanvas{
         this.canvas.setAttribute('height', height)
         this.ctx.strokeStyle = 'red'
         this.ctx.lineWidth = 1
+    }
+    //清除画布
+    cleanCanvas(){
+        console.log(0,0,this.canvas.width,this.canvas.height);
+        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+        this.isEdit = false
+    }
+    checkIsEdit(){
+        return this.isEdit
     }
     //自由画笔
     drawLine(){

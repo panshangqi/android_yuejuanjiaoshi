@@ -38,11 +38,8 @@ class Home extends Component {
         })
     }
     componentDidMount(){
-        if(this.mark_type == '0'){
-            this.callback()
-        }else{
-            this.onTabsChange({target: {value: this.mark_type}})
-        }
+        qishi.util.alert('哈哈')
+        this.onTabsChange({target: {value: this.mark_type}}) // 0 1
 
     }
     componentWillUnmount(){

@@ -15,17 +15,33 @@
 	.content{
 		font-size: 9px;
 		padding: 0px 10px 5px;
+		text-align: center;
 	}
 	.footer{
 		border-top: 1px solid #ddd;
 		text-align: center;
 		color: @theme_color;
-		font-size: 11px;
-		padding-bottom: 4px;
-		padding-top: 3px;
-		transition: background-color .7s;
-		&:active{
-			background-color: fadeout(@theme_color, 20%);
+		font-size: 10px;
+
+		display: flex;
+		justify-content: space-between;
+		.cancel{
+			color: #888;
+		}
+		div.btn{
+			flex: 1;
+			text-align: center;
+			// background-color: #32CD32;
+			padding-bottom: 4px;
+			padding-top: 3px;
+			transition: background-color .5s;
+			&:active{
+				background-color: fadeout(@theme_color, 20%);
+			}
+		}
+		div.line{
+			width: 1px;
+			background-color: #ddd;
 		}
 	}
 	.ant-modal-content{

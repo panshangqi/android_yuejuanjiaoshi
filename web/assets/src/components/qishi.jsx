@@ -57,7 +57,8 @@ Qishi.util = {
 
     alert:function(msg){
         message.config({
-            top: $(window).height()*0.5
+            top: $(window).height()*0.5,
+            duration: 1
         })
         message.warning(msg);
     },
@@ -68,7 +69,7 @@ Qishi.util = {
     },
     wsdl_url: function(){
         var ip = Qishi.cookies.get_cookies('yuejuan_teacher_ip');
-        console.log(ip)
+        //console.log(ip)
         //使用可跨域Chrome浏览器
         if(Qishi.config.ENV == "development"){
              return "/exam/AppdatacenterImpPort?wsdl";
