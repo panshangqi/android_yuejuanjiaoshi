@@ -27,6 +27,8 @@ class ServicePhone extends Component {
             canvas_height: 0,
             canvas_width: 0,
             show_loading: false,
+            full_mark: 0, //该题总分
+            small_mark: [], //小题分数
             contentHeight: $(window).height() - getRealPX(26)
         }
         this.windowWidth = $(window).width()
@@ -41,10 +43,12 @@ class ServicePhone extends Component {
         this.markScoreJson = {}
     }
     componentDidMount(){
+        //qishi.util.alert( '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈')
+        this.myCanvas = new MyCanvas('main_canvas', 'main_box')
         this.init()
     }
     async init(){
-        this.myCanvas = new MyCanvas('main_canvas', 'main_box')
+
         this.mark_type = this.url_params.type  //正评 0  回评 1
         if(this.mark_type == '0'){
             this.selected_queid = this.url_params.queid
@@ -57,7 +61,8 @@ class ServicePhone extends Component {
         }
         await this.getExamTaskQuesInfo() //获取此次考试 每道题的详情，以及给分情况
         await this.getMarkRecordList() //阅卷记录
-
+        this.refs.score_panel.resetScore()
+        this.refs.label_side_bar.resetStatus()
     }
     componentWillReceiveProps(nextProps){
         console.log('=================================================')
@@ -123,19 +128,21 @@ class ServicePhone extends Component {
         }
         if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK) {
             //如果题目没有小问
+            let full_mark = 0
             let score_points_list = []
             for(let que of res.data.message){
                 if(que.queid == this.selected_queid){
                     score_points_list = que.scorepoints.split(',')
                     //console.log(score_points_list)
+                    full_mark = que.fullmark
                     break
                 }
             }
             this.setState({
                 ques_list: res.data.message,
-                score_points_list
+                score_points_list,
+                full_mark: full_mark
             })
-
             return true
         }
     }
@@ -157,7 +164,7 @@ class ServicePhone extends Component {
             })
         }
     }
-    //提交分数 params: score总分， smallscore：小题分(各小题分用逗号隔开)
+    //提交正评分数 params: score总分， smallscore：小题分(各小题分用逗号隔开)
     async submitMarkingScore(totalscore, smallscore) {
         this.markScoreJson.endTime = new Date().getTime();
         this.markScoreJson.usedtime = (this.markScoreJson.endTime - this.markScoreJson.startTime).toString()
@@ -181,7 +188,7 @@ class ServicePhone extends Component {
         let scoreJsonString = JSON.stringify(finalMarkScoreJson)
 
         let res = await qishi.http.getSync("SaveNormalScore", [userid, token, scoreJsonString])
-        console.log('提交分数')
+        console.log('提交正评分数')
         console.log(res)
 
         if (!res || res.type == 'ERROR') {
@@ -189,18 +196,49 @@ class ServicePhone extends Component {
             return false
         }
         if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK) {
-            if(this.mark_type == '1')  //回评
-            {
-                this.refs.confirm_dlg.showModal(()=>{
-                    this.backClick()
-                })
-            }
-            else{
-                window.location.href = `#/correct_edit_score?queid=${this.url_params.queid}&quename=${this.url_params.quename}&type=0&t=${new Date().getTime()}`
-                console.log('继续批改下一题')
-            }
+            window.location.href = `#/correct_edit_score?queid=${this.url_params.queid}&quename=${this.url_params.quename}&type=0&t=${new Date().getTime()}`
+            console.log('继续批改下一题')
         }
     }
+    //提交回评分数
+    async submitAlreadySubmitScore(totalscore, smallscore){
+        this.markScoreJson.endTime = new Date().getTime();
+        this.markScoreJson.usedtime = (this.markScoreJson.endTime - this.markScoreJson.startTime).toString()
+        this.markScoreJson.score = totalscore;
+        this.markScoreJson.smallscore = smallscore;
+        if(this.myCanvas.checkIsEdit() == true){
+            let base64str = this.myCanvas.canvas.toDataURL("image/png")
+            base64str = base64str.replace("data:image/png;base64,", "")
+            this.markScoreJson.commentimage = base64str
+        }else{
+            this.markScoreJson.commentimage = ""
+        }
+        //console.log(this.markScoreJson)
+        let finalMarkScoreJson = JSON.parse(JSON.stringify(this.markScoreJson))
+        delete finalMarkScoreJson.startTime
+        delete finalMarkScoreJson.endTime
+        console.log(finalMarkScoreJson)
+
+        let token = qishi.cookies.get_token();
+        let userid = qishi.cookies.get_userid();
+        let scoreJsonString = JSON.stringify(finalMarkScoreJson)
+
+        let res = await qishi.http.getSync("SaveAlreadmarknewscore", [userid, token, scoreJsonString])
+        console.log('提交回评分数')
+        console.log(res)
+
+        if (!res || res.type == 'ERROR') {
+            qishi.util.alert("网络错误")
+            return false
+        }
+        if (res.type == 'AJAX' && res.data.codeid == qishi.config.responseOK){
+            console.log('提交成功')
+            this.refs.confirm_dlg.showModal(()=>{
+                this.backClick()
+            })
+        }
+    }
+    //提交仲裁
     async submitArbitrate(){
 
         let finalAbtJson = {
@@ -267,17 +305,22 @@ class ServicePhone extends Component {
     onImgLoad(){
         let imgW = $('#main_image').width();
         let imgH = $('#main_image').height();
-
         console.log('图片加载完成', imgW, imgH)
-
         this.myCanvas.setWH(imgW, imgH)
         //加载标注图层
         if(this.mark_type == '1'){
-            let image = new Image()
-            image.src = `data:image/png;base64,${this.markScoreJson.commentimage}`//
-            image.onload = () => {
-                this.myCanvas.ctx.drawImage(image, 0, 0);
+            if(this.markScoreJson.commentimage.length > 0) //没有标注过内容
+            {
+                this.myCanvas.isEdit = true //标记为编辑过
+                let image = new Image()
+                image.src = `data:image/png;base64,${this.markScoreJson.commentimage}`//
+                image.onload = () => {
+                    this.myCanvas.ctx.drawImage(image, 0, 0);
+                }
+            }else{
+                this.myCanvas.isEdit = false  //为编辑过，则不需要画出图层
             }
+
         }
         setTimeout(()=>{
             this.setState({
@@ -288,7 +331,8 @@ class ServicePhone extends Component {
     screenRotate(event){
         console.log('屏幕翻转', event.message)
     }
-    backClick(){
+    async backClick(){
+        await qishi.sleep(300)
         let url = "#/home?type=" + this.mark_type
         if(window.yuejuanteacher)
         {
@@ -364,7 +408,14 @@ class ServicePhone extends Component {
         console.log(num)
     }
     onSubmitScoreClick(score, e){
-        this.submitMarkingScore(score,"")
+
+        if(this.mark_type == '0')
+            this.submitMarkingScore(score,"")
+        else
+            this.submitAlreadySubmitScore(score, "")
+    }
+    onRecordScoreClick(item){
+        window.location.href = `#/correct_edit_score?secretid=${item.secretid}&quename=${item.quename}&type=1&t=${new Date().getTime()}`
     }
     onChangeQueIDClick(item){
         window.location.href = `#/correct_edit_score?queid=${item.queid}&quename=${item.quename}&type=0&t=${new Date().getTime()}`
@@ -383,7 +434,7 @@ class ServicePhone extends Component {
                 </div>
                 <div className="content">
                     <div className="left">
-                        <div><LabelSideBar onLabelClick={this.onLabelClick.bind(this)}/></div>
+                        <LabelSideBar onLabelClick={this.onLabelClick.bind(this)} ref="label_side_bar"/>
                     </div>
                     <div className="mid" id="main_box" style={{height: this.state.contentHeight}}>
                             <img src={this.state.image_url} id="main_image" onLoad={this.onImgLoad.bind(this)}/>
@@ -433,7 +484,7 @@ class ServicePhone extends Component {
                                         quename: data.quename
                                     }
                                     return (
-                                        <div className="item-wrap" style={style} key={key}>
+                                        <div className="item-wrap" style={style} key={key} onClick={this.onRecordScoreClick.bind(this,params)}>
                                             <span>{params.order}</span>
                                             <span style={{color:'#f00'}}>{params.score}</span>
                                         </div>
@@ -442,7 +493,13 @@ class ServicePhone extends Component {
                             />
                         </div>
                         <div className="ques_list panel_3 panel_bg" style={{height: this.state.contentHeight}}>
-                            <ScorePanel/>
+                            <ScorePanel
+                                ref={"score_panel"}
+                                full_score={this.state.full_mark}
+                                scorePanelCallback={(score)=>{
+                                    this.onSubmitScoreClick(score, null)
+                                }}
+                            />
                         </div>
                         <div className="ques_list panel_4 panel_bg" style={{height: this.state.contentHeight}}>
                             <List

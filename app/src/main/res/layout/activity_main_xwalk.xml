@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/main_activity"
     tools:context=".MainXwalkActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
         <Button
             android:id="@+id/f5_btn"
             android:layout_width="wrap_content"
@@ -25,12 +27,23 @@
             android:background="#90ffffff"
             />
     </LinearLayout>
-
     <org.xwalk.core.XWalkView
         android:id="@+id/xWalkWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="#fff"
         android:orientation="vertical" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginTop="0dp"
+        android:id="@+id/first_screen"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/startup"
+        android:layout_x="0px"
+        android:layout_y="0px"
+        >
 
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

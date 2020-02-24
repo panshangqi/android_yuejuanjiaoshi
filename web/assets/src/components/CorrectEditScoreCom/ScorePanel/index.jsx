@@ -11,7 +11,8 @@ class ScorePanelCom extends Component {
         super(props);
         this.state = {
             stu_score: "0",
-            full_score: 0
+            full_score: typeof props.full_score == 'number' ? props.full_score: 0,
+            scorePanelCallback: props.scorePanelCallback
         }
 
     }
@@ -19,7 +20,10 @@ class ScorePanelCom extends Component {
 
     }
     componentWillReceiveProps(props){
-
+        //console.log('>>>>>>>>>>>>>>>',props)
+        this.setState({
+            full_score: typeof props.full_score == 'number' ? props.full_score: 0
+        })
     }
     shouldComponentUpdate(nextProps, nextState) {
 
@@ -30,7 +34,11 @@ class ScorePanelCom extends Component {
             return;
         };
     }
-
+    resetScore(){
+        this.setState({
+            stu_score: "0"
+        })
+    }
     scoreClick(num){
         console.log(num)
         let temp_score = this.state.stu_score
@@ -64,6 +72,10 @@ class ScorePanelCom extends Component {
     submitClick(){
         if( Number(this.state.stu_score) - this.state.full_score > 0.0001){
             qishi.util.alert('分数最高为'+this.state.full_score+'分')
+            return
+        }
+        if(typeof this.state.scorePanelCallback == 'function'){
+            this.state.scorePanelCallback(this.state.stu_score)
         }
     }
     render() {

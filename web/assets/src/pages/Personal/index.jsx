@@ -56,7 +56,13 @@ class PersonalCenter extends Component {
         this.props.history.push('/general_question')
     }
     servicePhoneClick(){
-        this.props.history.push('/service_phone')
+        window.location.href = '#/service_phone'
+    }
+    parentRequest(){
+        window.location.href = '#/parent_request'
+    }
+    parentRegister(){
+        window.location.href = '#/parent_register'
     }
     onLogoutClick(){
         this.props.history.push('/login')
@@ -86,21 +92,21 @@ class PersonalCenter extends Component {
                             <img src={my_change_password}/>
                             <span>修改密码</span>
                         </div>
-                        <div className="col col2">
+                        <div className="col col2" onClick={this.parentRequest.bind(this)}>
                             <img src={my_householder_invite}/>
                             <span>家长邀请</span>
                         </div>
-                        <div className="col col3">
+                        <div className="col col3" onClick={this.parentRegister.bind(this)}>
                             <img src={my_register_householder}/>
                             <span>注册家长</span>
                         </div>
                     </div>
                     <div className="row2">
-                        <div className="col col1">
+                        <div className="col col1" onClick={this.generalQuesClick.bind(this)}>
                             <img src={my_fre_question}/>
                             <span>常见问题</span>
                         </div>
-                        <div className="col col2">
+                        <div className="col col2" onClick={this.servicePhoneClick.bind(this)}>
                             <img src={my_custom_service_phone}/>
                             <span>客服电话</span>
                         </div>

@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.xwalk.core.XWalkPreferences;
@@ -23,13 +24,14 @@ import org.xwalk.core.XWalkView;
 public class MainXwalkActivity extends AppCompatActivity {
     XWalkView mXwview;
     Button f5Btn, screenDirection;
+    LinearLayout firstScreen;
     boolean isLoadUrl  = false;
     private long time =0;
     int rotate = 0; //0横屏 1竖屏
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main_xwalk);
         /*
         Android 4.4 SDK19之前，Android 的状态栏是黑色背景，无法修改。
@@ -64,6 +66,7 @@ public class MainXwalkActivity extends AppCompatActivity {
 
         f5Btn = (Button)findViewById(R.id.f5_btn);
         screenDirection = (Button)findViewById(R.id.screen_direction);
+        firstScreen = (LinearLayout)findViewById(R.id.first_screen);
 
         if(Public.ENV.equals("development"))
         {
@@ -72,6 +75,8 @@ public class MainXwalkActivity extends AppCompatActivity {
             mXwview.loadUrl("http://192.168.8.108:10033/templates/index.html", null);
 
         }else{
+            f5Btn.setVisibility(View.GONE);
+            screenDirection.setVisibility(View.GONE);
             mXwview.loadUrl("file:///android_asset/build/templates/index.html", null);
         }
 
@@ -86,6 +91,23 @@ public class MainXwalkActivity extends AppCompatActivity {
                 super.onPageLoadStopped(view, url, status);
                 Log.v("YJ finish", url);
                 mXwview.load("javascript:window.yuejuanteacher=true;", null);
+                mXwview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try
+                        {
+                            //Thread.sleep(100);    //延时2秒
+                            //firstScreen.setVisibility(View.GONE);
+                            Public.fadeOut(firstScreen, 1300);
+                            //Toast.makeText(MainXwalkActivity.this, "load html", Toast.LENGTH_LONG).show();
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
             }
         });
 
@@ -198,4 +220,5 @@ public class MainXwalkActivity extends AppCompatActivity {
             MainXwalkActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         }
     }
+
 }

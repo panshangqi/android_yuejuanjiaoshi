@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import { message, Spin } from 'antd'
+import Message from '@components/Message'
 console.log("environment: " + process.env.NODE_ENV)
 console.log("os env: " + navigator.userAgent)
 const Qishi = {};
@@ -56,11 +57,12 @@ Qishi.cookies = {
 Qishi.util = {
 
     alert:function(msg){
-        message.config({
-            top: $(window).height()*0.5,
-            duration: 1
-        })
-        message.warning(msg);
+        // message.config({
+        //     top: $(window).height()*0.5,
+        //     duration: 1
+        // })
+        // message.warning(msg);
+        Message.warn({string: msg})
     },
     log:function(msg){
         if(typeof android != 'undefined'){
@@ -78,7 +80,7 @@ Qishi.util = {
         if(ip){
             return `http://${ip}/exam/AppdatacenterImpPort?wsdl`
         }else{
-            Qishi.util.alert("访问错误")
+            Qishi.util.alert("访问错误ip"+ip)
             return "";
         }
     },
@@ -90,14 +92,14 @@ Qishi.util = {
         return `${Qishi.config.book_ip}${route}`
     },
     make_image_url(image_name){
-        var ip = Qishi.cookies.get_cookies('yuejuan_ip');
+        var ip = Qishi.cookies.get_cookies('yuejuan_teacher_ip');
         if(Qishi.config.ENV == "development"){
             return "/exam/appshowimage?path="+image_name;
         }
         if(ip){
             return `http://${ip}/exam/appshowimage?path=${image_name}`
         }else{
-            Qishi.util.alert("访问错误")
+            Qishi.util.alert("访问错误yuejuan_ip"+ip)
             return "";
         }
     },
@@ -258,6 +260,13 @@ function os_versions(){
         iPad: u.indexOf('iPad') > -1, //是否iPad
         webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
     };
+}
+Qishi.sleep = function(time){
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            resolve()
+        }, time)
+    })
 }
 Qishi.browser = {
     versions: os_versions()

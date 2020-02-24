@@ -19,11 +19,11 @@ class MyCanvas{
         this.isEdit = false // 是否编辑过画布
 
         this.canvas.ontouchstart = (e) => {
-            console.log(e)
+            //console.log(e)
             this.old_point.x = e.touches[0].pageX - this.offsetLeft
             this.old_point.y = e.touches[0].pageY - this.offsetTop + this.box.scrollTop
-            console.log(e.touches[0].pageX, e.touches[0].pageY)
-            console.log(this.offsetLeft, this.offsetTop)
+            //console.log(e.touches[0].pageX, e.touches[0].pageY)
+            //console.log(this.offsetLeft, this.offsetTop)
 
             if(this.isDrawDui){
                 let first = {
@@ -136,15 +136,21 @@ class MyCanvas{
     mo(e){
         e.preventDefault();
     }
-    setWH(width, height){
+    setWH(width, height){ //canvas修改宽高的时候画布内容自动清空
         this.canvas.setAttribute('width', width)
         this.canvas.setAttribute('height', height)
         this.ctx.strokeStyle = 'red'
         this.ctx.lineWidth = 1
+        console.log('>>>>isEdit', this.isEdit)
+
+        this.cleanCanvas()
+        if(this.isDraw){
+            this.cancelDrawLine()
+        }
     }
     //清除画布
     cleanCanvas(){
-        console.log(0,0,this.canvas.width,this.canvas.height);
+        //console.log(0,0,this.canvas.width,this.canvas.height);
         this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.isEdit = false
     }

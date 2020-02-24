@@ -62,6 +62,7 @@ module.exports = {
                             'theme_red': '#FF796B',
                             'theme_green': '#13D469',
                             'theme_gray': '#f2f2f2',
+                            'theme_deep': '#df6000',
                             'img_root': '/static/imgs'
                         },
                         modifyVars:{

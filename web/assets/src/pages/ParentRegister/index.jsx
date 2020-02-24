@@ -4,10 +4,9 @@ import qishi from '@components/qishi.jsx';
 import TitleBar from '@components/TitleBar'
 import './style.less'
 
-class ServicePhone extends Component {
+class Register extends Component {
     constructor(props) {
         super(props);
-
     }
     componentWillUnmount(){
 
@@ -17,21 +16,19 @@ class ServicePhone extends Component {
     }
     render() {
         return (
-            <div className="service_phone_html">
+            <div className="general_ques_html">
                 <TitleBar
-                    title="客服电话"
+                    title="注册家长"
                     BackClick={(function(){
                         this.props.history.push("/personal")
                     }).bind(this)}
                 />
-
-                <div className="telephone">
-                    <span>如有问题请咨询下方奥亚客服电话：</span><br/>
-                    0373-80088208200
+                <div className="content">
+                    暂无内容
                 </div>
             </div>
         );
     }
 }
 
-export default ServicePhone;
+export default Register;

@@ -27,7 +27,9 @@ class TitleBar extends Component {
     }
     backClick(){
         if(typeof this.BackClick === 'function'){
-            this.BackClick();
+            setTimeout(()=>{
+                this.BackClick();
+            },200)
         }
     }
     getTitleBarHeight(){
@@ -36,11 +38,13 @@ class TitleBar extends Component {
     render() {
         return (
             <div className="titlebar_html" style={this.style} id="titlebar_html">
-                <img className="titlebar_title_back_img"
-                     src={toback}
-                     onClick={this.backClick.bind(this)}
-                     style={{display: this.back_ico ? 'block': 'none'}}
-                />
+                <div className="titlebar_title_back_img" onClick={this.backClick.bind(this)}>
+                    <img className=""
+                         src={toback}
+                         style={{display: this.back_ico ? 'block': 'none'}}
+                    />
+                </div>
+
                 <div className="titlebar_title">{this.title}</div>
             </div>
         );

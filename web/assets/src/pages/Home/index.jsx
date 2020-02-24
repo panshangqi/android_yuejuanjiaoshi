@@ -7,9 +7,7 @@ import { Radio, Tabs, Spin } from 'antd';
 import {List} from 'react-virtualized';
 import $ from 'jquery'
 import './style.less'
-
 const { TabPane } = Tabs;
-
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +17,7 @@ class Home extends Component {
             already_mark_list: [],
             windowWidth: $(window).width(),
             windowHeight: $(window).height(),
-            listHeight: $(window).height() - getRealPX(208),
+            listHeight: $(window).height() - getRealPX(195),
             show_loading: false
         }
         this.url_params = qishi.util.get_search_params(props.location.search)
@@ -38,7 +36,7 @@ class Home extends Component {
         })
     }
     componentDidMount(){
-        qishi.util.alert('哈哈')
+        //qishi.util.alert( '哈哈哈')
         this.onTabsChange({target: {value: this.mark_type}}) // 0 1
 
     }

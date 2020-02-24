@@ -100,6 +100,16 @@ class LabelSiderBarCom extends Component {
             this.state.onLabelClick(type)
         }
     }
+    resetStatus(){
+        this.setState( {
+            active_id: 0,
+            pen_active: false,
+            delete_active: false,
+            dui_active: false,
+            bandui_active: false,
+            wrong_active: false
+        })
+    }
     render() {
         return (
             <div className="label_side_bar_nav_html">

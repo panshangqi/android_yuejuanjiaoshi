@@ -45,6 +45,7 @@
             margin-top: 10px;
         }
     }
+    @border_color: #ccc;
     .menu_box{
         width: 100%;
         background-color: #fff;
@@ -53,7 +54,7 @@
         .row{
             display: flex;
             justify-content: space-around;
-            border-bottom: 1px solid #777;
+            border-bottom: 1px solid @border_color;
             height: 140px;
             .col{
                 flex: 1;
@@ -79,11 +80,11 @@
             }
             .col2{
 
-                border-left: 1px solid #777;
+                border-left: 1px solid @border_color;
             }
             .col3{
 
-                border-left: 1px solid #777;
+                border-left: 1px solid @border_color;
             }
         }
         .row2{
@@ -93,7 +94,7 @@
             }
             .col2{
 
-                border-left: 1px solid #777;
+                border-left: 1px solid @border_color;
             }
         }
     }
