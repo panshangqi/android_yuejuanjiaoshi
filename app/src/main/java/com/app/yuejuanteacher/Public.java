@@ -7,7 +7,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 public class Public extends Application {
-    public static String ENV = "development";
+    public static String ENV = "development1";
     public static String cookiestr = "";
     public static Context context = null;
     @Override

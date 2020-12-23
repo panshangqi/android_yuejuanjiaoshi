@@ -1,5 +1,6 @@
 package com.app.yuejuanteacher;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -72,7 +74,7 @@ public class MainXwalkActivity extends AppCompatActivity {
         {
             //开启调式,支持谷歌浏览器调式
             XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
-            mXwview.loadUrl("http://192.168.8.108:10033/templates/index.html", null);
+            mXwview.loadUrl("http://192.168.8.107:10033/templates/index.html", null);
 
         }else{
             f5Btn.setVisibility(View.GONE);
@@ -84,13 +86,26 @@ public class MainXwalkActivity extends AppCompatActivity {
             @Override
             public void onPageLoadStarted(XWalkView view, String url) {
                 super.onPageLoadStarted(view, url);
-
+                Log.v("YJ start", url);
             }
             @Override
             public void onPageLoadStopped(XWalkView view, String url, LoadStatus status) {
                 super.onPageLoadStopped(view, url, status);
                 Log.v("YJ finish", url);
                 mXwview.load("javascript:window.yuejuanteacher=true;", null);
+//                Configuration mConfiguration = MainXwalkActivity.this.getResources().getConfiguration();
+//                int ori = mConfiguration.orientation; //获取屏幕方向
+//                if(url.indexOf("correct_edit_score") != -1){
+//                    //if(ori == mConfiguration.ORIENTATION_PORTRAIT){
+//                       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
+//                        Log.v("YJ","旋转为横屏");
+//                    //}
+//                }else{
+//                    //if(ori == mConfiguration.ORIENTATION_LANDSCAPE){
+//                       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+//                        Log.v("YJ","旋转为竖屏");
+//                    //}
+//                }
                 mXwview.post(new Runnable() {
                     @Override
                     public void run() {
@@ -120,12 +135,12 @@ public class MainXwalkActivity extends AppCompatActivity {
         if(rotate==0){
             rotate = 1;
 
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
         }else{
             rotate = 0;
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         }
-        Toast.makeText(MainXwalkActivity.this,"切换.",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainXwalkActivity.this,"切换.",Toast.LENGTH_SHORT).show();
     }
     //android 调用 js
     @Override
@@ -133,17 +148,23 @@ public class MainXwalkActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
     @Override
+    public void onBackPressed(){
+        Log.v("YJ","Back 返回按键");
+    }
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK ) {
+            //do something.
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
+    }
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            if (webView.canGoBack()) {
-//                //webView.goBack();
-//                //finish();
-//
-//            } else {
-//                Log.v("YJ","KEYCODE_BACK finish");
-//                finish();
-//                return true;
-//            }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+
             if ((System.currentTimeMillis() - time > 1000)) {
                 Toast.makeText(this, "再按一次返回桌面", Toast.LENGTH_SHORT).show();
                 time = System.currentTimeMillis();
@@ -153,10 +174,11 @@ public class MainXwalkActivity extends AppCompatActivity {
                 intent.addCategory("android.intent.category.HOME");
                 startActivity(intent);
             }
-
+            //finish();
             return true;
+        }else{
+            return super.onKeyDown(keyCode, event);
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     //防止内存泄漏

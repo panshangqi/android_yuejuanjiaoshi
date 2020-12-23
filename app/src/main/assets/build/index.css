@@ -656,6 +656,10 @@ body {
   vertical-align: top;
   display: -ms-flexbox;
   display: flex;
+  transition: background-color 1s;
+}
+.correct_edit_score_html .head_bar .left_box:active {
+  background-color: #df6000;
 }
 .correct_edit_score_html .head_bar .left_box div img {
   vertical-align: top;
